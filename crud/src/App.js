@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 class App extends React.Component {
   constructor(props) {
@@ -9,9 +10,9 @@ class App extends React.Component {
       description: '',
       price: '',
       stock: '',
-      productId: '', // Estado para armazenar o ID do produto a ser consultado
-      productData: null, // Estado para armazenar os dados do produto consultado
-      token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzIsImlhdCI6MTcxMzc0MjMxNH0.zpT55x8wVQfbGqTe4ZnBdgMwfbBqcaug08Yx_bjoRIU" // Token de autenticação
+      productId: '',
+      productData: null,
+      token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzIsImlhdCI6MTcxMzc0MjMxNH0.zpT55x8wVQfbGqTe4ZnBdgMwfbBqcaug08Yx_bjoRIU"
     };
   }
 
@@ -24,7 +25,6 @@ class App extends React.Component {
     event.preventDefault();
     const { name, description, price, stock, token } = this.state;
 
-    // Crie um cabeçalho de autorização com o token
     const authHeader = `Bearer ${token}`;
 
     try {
@@ -56,11 +56,9 @@ class App extends React.Component {
     }
   };
 
-  // Função para consultar um produto específico
   handleGetProduct = async () => {
     const { productId, token } = this.state;
   
-    // Crie um cabeçalho de autorização com o token
     const authHeader = `Bearer ${token}`;
   
     try {
@@ -71,7 +69,6 @@ class App extends React.Component {
       });
       const productData = response.data.data;
       
-      // Atualiza o estado com os dados do produto consultado
       this.setState({ productData });
       console.log('Dados recebidos da API:', response.data);
 
@@ -81,11 +78,9 @@ class App extends React.Component {
     }
   };
 
-  // Função para buscar todos os produtos
   handleGetAllProducts = async () => {
     const { token } = this.state;
   
-    // Crie um cabeçalho de autorização com o token
     const authHeader = `Bearer ${token}`;
   
     try {
@@ -95,7 +90,6 @@ class App extends React.Component {
         }
       });
       
-      // Armazena os dados dos produtos no estado do componente
       this.setState({ productData: response.data.data});
       console.log('Dados recebidos da API:', response.data);
 
@@ -105,11 +99,9 @@ class App extends React.Component {
     }
   };  
 
-  // Função para atualizar um produto
   handleUpdateProduct = async () => {
     const { productId, name, description, price, stock, token } = this.state;
   
-    // Crie um cabeçalho de autorização com o token
     const authHeader = `Bearer ${token}`;
   
     try {
@@ -127,7 +119,6 @@ class App extends React.Component {
       
       alert('Produto atualizado com sucesso!');
       
-      // Limpa os campos após a atualização
       this.setState({
         name: '',
         description: '',
@@ -142,11 +133,9 @@ class App extends React.Component {
     }
   };
 
-  // Função para excluir um produto
   handleDeleteProduct = async (productIdToDelete) => {
     const { token } = this.state;
   
-    // Crie um cabeçalho de autorização com o token
     const authHeader = `Bearer ${token}`;
   
     try {
@@ -158,7 +147,6 @@ class App extends React.Component {
       
       alert('Produto excluído com sucesso!');
       
-      // Atualiza a lista de produtos após a exclusão
       this.handleGetAllProducts();
 
     } catch (error) {
@@ -171,105 +159,108 @@ class App extends React.Component {
     const { name, description, price, stock, productId, productData } = this.state;
 
     return (
-      <div className="App">
+      <div className="container">
         <header className="App-header">
           <h1>Criar, Consultar, Atualizar e Excluir Produto</h1>
           <form onSubmit={this.handleSubmit}>
-            <label>
-              Nome do Produto:
-              <input type="text" name="name" value={name} onChange={this.handleChange} required />
-            </label>
-            <label>
-              Descrição do Produto:
-              <textarea name="description" value={description} onChange={this.handleChange} required />
-            </label>
-            <label>
-              Preço do Produto:
-              <input type="number" name="price" value={price} onChange={this.handleChange} required />
-            </label>
-            <label>
-              Estoque do Produto:
-              <input type="number" name="stock" value={stock} onChange={this.handleChange} required />
-            </label>
-            <button type="submit">Criar Produto</button>
+            <div className="form-group">
+              <label>Nome do Produto:</label>
+              <input type="text" className="form-control" name="name" value={name} onChange={this.handleChange} required />
+            </div>
+            <div className="form-group">
+              <label>Descrição do Produto:</label>
+              <textarea className="form-control" name="description" value={description} onChange={this.handleChange} required />
+            </div>
+            <div className="form-group">
+              <label>Preço do Produto:</label>
+              <input type="number" className="form-control" name="price" value={price} onChange={this.handleChange} required />
+            </div>
+            <div className="form-group">
+              <label>Estoque do Produto:</label>
+              <input type="number" className="form-control" name="stock" value={stock} onChange={this.handleChange} required />
+            </div>
+            <button type="submit" className="btn btn-primary">Criar Produto</button>
           </form>
           <div>
             <h2>Consultar Produto</h2>
-            <label>
-              ID do Produto:
-              <input type="text" name="productId" value={productId} onChange={this.handleChange} />
-            </label>
-            <button onClick={this.handleGetProduct}>Consultar</button>
+            <div className="form-group">
+              <label>ID do Produto:</label>
+              <input type="text" className="form-control" name="productId" value={productId} onChange={this.handleChange} />
+            </div>
+            <button className="btn btn-info" onClick={this.handleGetProduct}>Consultar</button>
           </div>
           <div>
             <h2>Buscar Todos os Produtos</h2>
-            <button onClick={this.handleGetAllProducts}>Buscar Todos</button>
-            {productData && ( // Verifica se productData não é nulo
+            <button className="btn btn-success" onClick={this.handleGetAllProducts}>Buscar Todos</button>
+            {productData && (
               <div>
-                {Array.isArray(productData) ? ( // Verifica se productData é um array
+                {Array.isArray(productData) ? (
                   <div>
                     <h3>Dados de Todos os Produtos:</h3>
                     {productData.map((product, index) => (
-                      <div key={index}>
-                        <p>Nome: {product.name}</p>
-                        <p>Descrição: {product.description}</p>
-                        <p>Preço: {product.price}</p>
-                        <p>Estoque: {product.stock}</p>
-                        {product.createdAt && (
-                          <p>Criado em: {product.createdAt}</p>
-                        )}
-                        {product.updatedAt && (
-                          <p>Atualizado em: {product.updatedAt}</p>
-                        )}
-                        <button onClick={() => this.setState({ productId: product.id })}>Editar</button>
-                        <button onClick={() => this.handleDeleteProduct(product.id)}>Excluir</button>
+                      <div key={index} className="card my-2">
+                        <div className="card-body">
+                          <p>Nome: {product.name}</p>
+                          <p>Descrição: {product.description}</p>
+                          <p>Preço: {product.price}</p>
+                          <p>Estoque: {product.stock}</p>
+                          {product.createdAt && (
+                            <p>Criado em: {product.createdAt}</p>
+                          )}
+                          {product.updatedAt && (
+                            <p>Atualizado em: {product.updatedAt}</p>
+                          )}
+                          <button className="btn btn-warning mr-2" onClick={() => this.setState({ productId: product.id })}>Editar</button>
+                          <button className="btn btn-danger" onClick={() => this.handleDeleteProduct(product.id)}>Excluir</button>
+                        </div>
                       </div>
                     ))}
                   </div>
-                ) : ( // Caso contrário, productData é um objeto
+                ) : (
                   <div>
                     <h3>Dados do Produto:</h3>
-                    <div>
-                      <p>Nome: {productData.name}</p>
-                      <p>Descrição: {productData.description}</p>
-                      <p>Preço: {productData.price}</p>
-                      <p>Estoque: {productData.stock}</p>
-                      {productData.createdAt && (
-                        <p>Criado em: {productData.createdAt}</p>
-                      )}
-                      {productData.updatedAt && (
-                        <p>Atualizado em: {productData.updatedAt}</p>
-                      )}
-                      <button onClick={() => this.setState({ productId: productData.id })}>Editar</button>
-                      <button onClick={() => this.handleDeleteProduct(productData.id)}>Excluir</button>
+                    <div className="card">
+                      <div className="card-body">
+                        <p>Nome: {productData.name}</p>
+                        <p>Descrição: {productData.description}</p>
+                        <p>Preço: {productData.price}</p>
+                        <p>Estoque: {productData.stock}</p>
+                        {productData.createdAt && (
+                          <p>Criado em: {productData.createdAt}</p>
+                        )}
+                        {productData.updatedAt && (
+                          <p>Atualizado em: {productData.updatedAt}</p>
+                        )}
+                        <button className="btn btn-warning mr-2" onClick={() => this.setState({ productId: productData.id })}>Editar</button>
+                        <button className="btn btn-danger" onClick={() => this.handleDeleteProduct(productData.id)}>Excluir</button>
+                      </div>
                     </div>
                   </div>
                 )}
               </div>
             )}
           </div>
-          {/* Formulário de atualização do produto */}
           {productId && (
             <div>
               <h2>Atualizar Produto</h2>
               <form onSubmit={this.handleUpdateProduct}>
-                <label>
-                  Nome do Produto:
-                  <input type="text" name="name" value={name} onChange={this.handleChange} required />
-                </label>
-                <label>
-                  Descrição do Produto:
-                  <textarea name="description" value={description} onChange={this.handleChange} required />
-                </label>
-                <label>
-                  Preço do Produto:
-                  <input type="number" name="price" value={price} onChange={this.handleChange} required />
-                </label>
-                <label>
-                  Estoque do Produto:
-                  <input type="number" name="stock" value={stock} onChange={this.handleChange} required />
-                </label>
-                <button type="submit">Atualizar Produto</button>
+                <div className="form-group">
+                  <label>Nome do Produto:</label>
+                  <input type="text" className="form-control" name="name" value={name} onChange={this.handleChange} required />
+                </div>
+                <div className="form-group">
+                  <label>Descrição do Produto:</label>
+                  <textarea className="form-control" name="description" value={description} onChange={this.handleChange} required />
+                </div>
+                <div className="form-group">
+                  <label>Preço do Produto:</label>
+                  <input type="number" className="form-control" name="price" value={price} onChange={this.handleChange} required />
+                </div>
+                <div className="form-group">
+                  <label>Estoque do Produto:</label>
+                  <input type="number" className="form-control" name="stock" value={stock} onChange={this.handleChange} required />
+                </div>
+                <button type="submit" className="btn btn-primary">Atualizar Produto</button>
               </form>
             </div>
           )}
